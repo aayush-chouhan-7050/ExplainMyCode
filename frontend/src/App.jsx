@@ -3,8 +3,7 @@ import Home from "./pages/Home";
 import History from "./pages/History";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import { AppBar, Toolbar, Typography, Button, Container } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button , Box, Container} from "@mui/material";
 
 function App() {
   return (
@@ -23,13 +22,14 @@ function App() {
           </Button>
         </Toolbar>
       </AppBar>
-
-      <Container sx={{ mt: 4 }}>
+      <Box sx={{ minHeight: "100vh", backgroundColor: "background.default", py: 4 }} >
+      <Container maxWidth="md">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/history" element={<History />} />
         </Routes>
       </Container>
+      </Box>
     </Router>
   );
 }
