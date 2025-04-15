@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getDebugHistory } from "../api";
 import api from "../api";
+import { getCurrentUser } from "../api";
 import {
   BugReport as BugIcon,
   Check as CheckIcon,
@@ -12,7 +13,8 @@ import {
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useAuth(); // from context
+  const [userData, setUserData] = useState(null); // local fetched user
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalDebugs: 0,
@@ -41,6 +43,14 @@ const Dashboard = () => {
       fetchData();
     }
   }, [user]);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const data = await getCurrentUser();
+      setUserData(data);
+    };
+    fetchUser();
+  }, []);
+  
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -72,7 +82,7 @@ const Dashboard = () => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">
-            Welcome back, {user?.name || "User"}!
+          Welcome back , {userData?.user?.username || "User"} !
           </h1>
           <p className="text-gray-600">
             Here's your coding activity overview

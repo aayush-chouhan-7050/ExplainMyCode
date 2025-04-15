@@ -36,9 +36,9 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const register = async (email, password, name) => {
+  const register = async (email, password, username) => {
     try {
-      const res = await api.post("/auth/register", { email, password, name });
+      const res = await api.post("/auth/register", { email, password, username });
       setUser(res.data.user);
       toast.success("Registration successful!");
       navigate("/dashboard");

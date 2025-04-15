@@ -7,7 +7,7 @@ export default function LoginSignupPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState(""); // Changed from name to username
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -20,7 +20,7 @@ export default function LoginSignupPage() {
     // Reset form when toggling
     setEmail("");
     setPassword("");
-    setName("");
+    setUsername("");
     setConfirmPassword("");
     setRememberMe(false);
   };
@@ -40,12 +40,12 @@ export default function LoginSignupPage() {
         await login(email, password);
         toast.success("Login successful!");
       } else {
-        if (!name.trim()) {
-          toast.error("Please enter your name");
+        if (!username.trim()) { // Check if username is entered
+          toast.error("Please enter a username");
           setLoading(false);
           return;
         }
-        await register(email, password, name);
+        await register(email, password, username); // Register with username
         toast.success("Registration successful!");
       }
       navigate("/dashboard");
@@ -120,16 +120,16 @@ export default function LoginSignupPage() {
           <form className="space-y-6" onSubmit={handleSubmit}>
             {!isLogin && (
               <div>
-                <label htmlFor="name" className="block text-gray-700 mb-2">
-                  Full Name
+                <label htmlFor="username" className="block text-gray-700 mb-2">
+                  Username 
                 </label>
                 <input
-                  id="name"
+                  id="username"
                   type="text"
-                  placeholder="John Doe"
+                  placeholder="john_doe"
                   className="w-full p-3 border border-gray-300 rounded-md"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)} // Updated state to username
                   required
                 />
               </div>
@@ -252,23 +252,22 @@ export default function LoginSignupPage() {
               </div>
 
               <div className="mt-6 grid grid-cols-2 gap-3">
-              <button type="button" className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                {/* GitHub Icon */}
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M12 0C5.373 0 0 5.373 0 12C0 17.303 3.438 21.8 8.205 23.385C8.805 23.48 9.025 23.145 9.025 22.845C9.025 22.575 9.015 21.905 9.01 21.065C5.672 21.785 4.968 19.525 4.968 19.525C4.422 18.135 3.633 17.765 3.633 17.765C2.546 17.045 3.717 17.06 3.717 17.06C4.922 17.145 5.555 18.305 5.555 18.305C6.63 20.105 8.408 19.595 9.048 19.295C9.138 18.515 9.45 17.985 9.795 17.685C7.14 17.385 4.344 16.315 4.344 11.635C4.344 10.295 4.824 9.205 5.63 8.365C5.505 8.065 5.085 6.805 5.745 5.105C5.745 5.105 6.765 4.785 8.995 6.355C9.975 6.075 11.025 5.935 12.075 5.93C13.125 5.935 14.175 6.075 15.155 6.355C17.385 4.785 18.405 5.105 18.405 5.105C19.065 6.805 18.645 8.065 18.52 8.365C19.33 9.205 19.805 10.295 19.805 11.635C19.805 16.325 17.005 17.38 14.34 17.675C14.775 18.045 15.165 18.795 15.165 19.935C15.165 21.555 15.15 22.515 15.15 22.845C15.15 23.15 15.375 23.49 15.985 23.385C20.755 21.795 24 17.295 24 12C24 5.373 18.627 0 12 0Z" />
-                </svg>
-              </button>
+                <button type="button" className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                  {/* GitHub Icon */}
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" clipRule="evenodd" d="M12 0C5.373 0 0 5.373 0 12C0 17.303 3.438 21.8 8.205 23.385C8.805 23.48 9.025 23.145 9.025 22.845C9.025 22.575 9.015 21.905 9.01 21.065C5.672 21.785 4.968 19.525 4.968 19.525C4.422 18.135 3.633 17.765 3.633 17.765C2.546 17.045 3.717 17.06 3.717 17.06C4.922 17.145 5.555 18.305 5.555 18.305C6.63 20.105 8.408 19.595 9.048 19.295C9.138 18.515 9.45 17.985 9.795 17.685C7.14 17.385 4.344 16.315 4.344 11.635C4.344 10.295 4.824 9.205 5.63 8.365C5.505 8.065 5.085 6.805 5.745 5.105C5.745 5.105 6.765 4.785 8.995 6.355C9.975 6.075 11.025 5.935 12.075 5.93C13.125 5.935 14.175 6.075 15.155 6.355C17.385 4.785 18.405 5.105 18.405 5.105C19.065 6.805 18.645 8.065 18.52 8.365C19.33 9.205 19.805 10.295 19.805 11.635C19.805 16.325 17.005 17.38 14.34 17.675C14.775 18.045 15.165 18.795 15.165 19.935C15.165 21.555 15.15 22.515 15.15 22.845C15.15 23.15 15.375 23.49 15.985 23.385C20.755 21.795 24 17.295 24 12C24 5.373 18.627 0 12 0Z" />
+                  </svg>
+                </button>
 
                 <button type="button" className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                   {/* Google Icon */}
                   <svg className="w-5 h-5" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
                     <path fill="#4285F4" d="M533.5 278.4c0-17.4-1.4-34.1-4.1-50.3H272v95.3h146.9c-6.3 34.1-25.3 63-53.9 82.3v68h86.9c50.8-46.8 81.6-115.8 81.6-195.3z"/>
                     <path fill="#34A853" d="M272 544.3c72.6 0 133.5-24.1 178-65.4l-86.9-68c-24.1 16.1-55 25.7-91.1 25.7-69.9 0-129.2-47.2-150.4-110.3H31.1v69.6c44.5 87.9 135.3 148.4 240.9 148.4z"/>
-                    <path fill="#FBBC05" d="M121.6 326.3c-10.7-31.9-10.7-66.2 0-98.1V158.6H31.1c-43.5 85.9-43.5 187.8 0 273.7l90.5-69.6z"/>
-                    <path fill="#EA4335" d="M272 107.7c39.5 0 75.1 13.6 103.2 40.3l77.4-77.4C405.5 25.5 344.6 0 272 0 166.4 0 75.6 60.5 31.1 148.4l90.5 69.6c21.2-63.1 80.5-110.3 150.4-110.3z"/>
+                    <path fill="#FBBC05" d="M121.9 271.1c0-13.5 1.3-26.4 3.7-38.4V164H31.1v68h58.5c-3.8 10.7-5.9 22.3-5.9 34.1 0 11.7 2.1 23.4 5.9 34.1H31.1v68h58.5c21.1-63.1 80.4-110.3 150.4-110.3z"/>
+                    <path fill="#EA4335" d="M272 106.3c38.3 0 70.8 12.9 97.7 34.7l72.7-72.7C419.3 36.4 347.6 16.5 272 16.5c-105.5 0-196.4 60.5-240.9 148.4l58.5 68c21.2-63.1 80.5-110.3 150.4-110.3z"/>
                   </svg>
                 </button>
-
               </div>
             </div>
           </form>
@@ -277,3 +276,4 @@ export default function LoginSignupPage() {
     </div>
   );
 }
+

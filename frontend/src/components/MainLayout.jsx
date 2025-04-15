@@ -25,9 +25,11 @@ const MainLayout = () => {
     <div className="flex h-screen">
       {/* Sidebar  */}
       <div className="w-60 flex-shrink-0 bg-white border-r border-gray-200 flex flex-col p-6">
+        <a href="/dashboard">
         <div className="text-indigo-600 font-semibold text-xl mb-8">
           &lt;/&gt; ExplainMyCode
-        </div>
+        </div></a>
+       
 
         <div className="flex-grow">
           <ul className="space-y-2">
