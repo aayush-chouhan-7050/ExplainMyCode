@@ -9,6 +9,7 @@ const debugHistorySchema = new mongoose.Schema({
     fixed_code: { type: String, default: '' },
     optimizations: { type: String, default: 'None' }
   },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   createdAt: { type: Date, default: Date.now }
 });
 

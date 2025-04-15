@@ -1,42 +1,40 @@
 import { useEffect, useState } from "react";
 import { getDebugHistory } from "../api";
-import {
-  Typography,
-  Card,
-  CardContent,
-  Box,
-  CircularProgress,
-  TextField,
-  Pagination,
-  Stack,
-} from "@mui/material";
+import { formatDistanceToNow } from 'date-fns';
 import { toast } from "react-toastify";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialLight } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { useAuth } from "../context/AuthContext";
 
 const DebugHistory = () => {
+  const { user } = useAuth();
   const [history, setHistory] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const itemsPerPage = 5;
+  const [error, setError] = useState(null);
+  const [sortBy, setSortBy] = useState("newest");
+  const itemsPerPage = 2;
 
   useEffect(() => {
+    if (!user) return;
+
     const fetchHistory = async () => {
       try {
+        setLoading(true);
         const data = await getDebugHistory();
         setHistory(data);
         setFiltered(data);
-        toast.success("History loaded!");
       } catch (error) {
-        toast.error(error.message);
+        setError(error.message);
+        toast.error("Failed to load history");
       } finally {
         setLoading(false);
       }
     };
     fetchHistory();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const lowerQuery = searchQuery.toLowerCase();
@@ -47,81 +45,170 @@ const DebugHistory = () => {
           entry.result.explanation.toLowerCase().includes(lowerQuery)) ||
         (entry.language && entry.language.toLowerCase().includes(lowerQuery))
     );
-    setFiltered(results);
-    setPage(1); // reset to page 1 when searching
-  }, [searchQuery, history]);
 
-  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    const sorted = [...results].sort((a, b) => {
+      if (sortBy === "newest") {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      } else {
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      }
+    });
+
+    setFiltered(sorted);
+    setPage(1);
+  }, [searchQuery, history, sortBy]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
   const paginatedItems = filtered.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
 
-  if (loading) return <CircularProgress />;
+  if (!user) {
+    return (
+      <div className="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mt-4">
+        Please login to view your debug history.
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center mt-8">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mt-4">
+        {error}
+      </div>
+    );
+  }
 
   return (
-    <Box display="flex" flexDirection="column" gap={3}>
-      <TextField
-        label="Search code, explanation, or language"
-        variant="outlined"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        fullWidth
-      />
+    <div className="flex flex-col gap-6 p-6">
+      <h4 className="text-3xl font-bold text-gray-900">
+        Debug History
+      </h4>
+      
+      <div className="flex flex-col sm:flex-row gap-4">
+        <input
+          type="text"
+          placeholder="Search code, explanation, or language"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
+        />
+        <div className="min-w-[120px]">
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          >
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+          </select>
+        </div>
+      </div>
 
       {paginatedItems.length > 0 ? (
-        paginatedItems.map((entry, index) => (
-          <Card key={index} variant="outlined">
-            <CardContent sx={{ overflowX: "auto" }}>
-              <Typography variant="subtitle2" gutterBottom>
-                <strong>Language:</strong> {entry.language}
-              </Typography>
-              
-              <Typography variant="subtitle2" gutterBottom>
-                <strong>Code:</strong>
-              </Typography>
-              <Box sx={{ fontSize: '0.8rem' }}> {/* Smaller font container */}
-                <SyntaxHighlighter 
-                  language={entry.language || 'javascript'} 
-                  style={materialLight}
-                  customStyle={{
-                    margin: 0,
-                    padding: '1em',
-                    fontSize: 'inherit', // Inherits from parent Box
-                    lineHeight: '1.3' // Tighter line height
-                  }}
-                >
-                  {entry.code}
-                </SyntaxHighlighter>
-              </Box>
-              
-              <Typography variant="subtitle2" gutterBottom>
-                <strong>Explanation:</strong>
-              </Typography>
-              <Box component="div" sx={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace' , fontSize: '0.9rem' }}>
-                {entry.result?.explanation}
-              </Box>
-            </CardContent>
-          </Card>
-        ))
+        <>
+          {paginatedItems.map((entry) => (
+            <HistoryEntry key={entry._id} entry={entry} />
+          ))}
+          
+          {filtered.length > itemsPerPage && (
+            <div className="flex justify-center mt-4">
+              <div className="flex space-x-2">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                  <button
+                    key={num}
+                    onClick={() => setPage(num)}
+                    className={`w-8 h-8 flex items-center justify-center rounded-md ${
+                      page === num
+                        ? 'bg-indigo-600 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    {num}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
       ) : (
-        <Typography variant="body1" align="center">
-          No history entries found
-        </Typography>
+        <div className="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mt-4">
+          {searchQuery ? 'No matching entries found' : 'Your debug history is empty'}
+        </div>
       )}
-
-      {filtered.length > itemsPerPage && (
-        <Stack alignItems="center">
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={(e, value) => setPage(value)}
-            color="primary"
-          />
-        </Stack>
-      )}
-    </Box>
+    </div>
   );
 };
+
+const HistoryEntry = ({ entry }) => (
+  <div className="bg-white rounded-lg border border-gray-100 hover:shadow-md transition-shadow overflow-x-auto">
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-2">
+        <span className="px-2 py-1 text-xs border border-indigo-500 text-indigo-600 rounded-full">
+          {entry.language}
+        </span>
+        <span className="text-xs text-gray-500">
+          {formatDistanceToNow(new Date(entry.createdAt), { addSuffix: true })}
+        </span>
+      </div>
+      
+      <hr className="my-3 border-gray-200" />
+      
+      <h6 className="text-sm font-semibold text-gray-900 mb-2">
+        Input Code:
+      </h6>
+      <div className="text-sm">
+        <SyntaxHighlighter 
+          language={entry.language?.toLowerCase() || 'javascript'} 
+          style={materialLight}
+          customStyle={{
+            margin: 0,
+            padding: '1em',
+            fontSize: 'inherit',
+            lineHeight: '1.3',
+            borderRadius: '0.375rem'
+          }}
+        >
+          {entry.code}
+        </SyntaxHighlighter>
+      </div>
+      
+      <h6 className="text-sm font-semibold text-gray-900 mb-2 mt-4">
+        Fixed Code:
+      </h6>
+      <div className="text-sm">
+        <SyntaxHighlighter 
+          language={entry.language?.toLowerCase() || 'javascript'} 
+          style={materialLight}
+          customStyle={{
+            margin: 0,
+            padding: '1em',
+            fontSize: 'inherit',
+            lineHeight: '1.3',
+            borderRadius: '0.375rem'
+          }}
+        >
+          {entry.result?.fixed_code}
+        </SyntaxHighlighter>
+      </div>
+      
+      <h6 className="text-sm font-semibold text-gray-900 mb-2 mt-4">
+        Explanation:
+      </h6>
+      <div className="whitespace-pre-wrap font-mono text-sm p-4 bg-gray-50 rounded-md">
+        {entry.result?.explanation}
+      </div>
+    </div>
+  </div>
+);
 
 export default DebugHistory;

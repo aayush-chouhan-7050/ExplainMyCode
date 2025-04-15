@@ -3,20 +3,8 @@ import { debugCode } from "../api";
 import { toast } from "react-toastify";
 import { FaPython, FaJs, FaJava, FaRust, FaHtml5, FaCss3Alt, FaCode } from "react-icons/fa";
 import { SiTypescript, SiCplusplus, SiGo, SiJson, SiMysql } from "react-icons/si";
-import {
-  TextField,
-  Select,
-  MenuItem,
-  Button,
-  Box,
-  Typography,
-  CircularProgress,
-  FormControl,
-  InputLabel,
-} from "@mui/material";
 import Editor from "@monaco-editor/react";
 
-// Constants moved outside component
 const LANGUAGES = [
   "JavaScript",
   "TypeScript",
@@ -87,9 +75,9 @@ const CodeInput = ({ setExplanation }) => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" gap={2}>
-      <Typography variant="h6">Paste your code:</Typography>
-      <Box sx={{ height: "40vh", minHeight: "300px" }}>
+    <div className="flex flex-col gap-2">
+      <h6 className="text-xl font-semibold text-gray-900">Paste your code:</h6>
+      <div className="h-[40vh] min-h-[300px]">
         <Editor
           height="100%"
           defaultLanguage="javascript"
@@ -103,35 +91,34 @@ const CodeInput = ({ setExplanation }) => {
             scrollBeyondLastLine: false,
           }}
         />
-      </Box>
-      <FormControl fullWidth>
-        <InputLabel id="language-select-label">Select Language</InputLabel>
-        <Select
-          labelId="language-select-label"
+      </div>
+      <div className="w-full">
+        <label className="block text-gray-700 mb-2" htmlFor="language-select">Select Language</label>
+        <select
+          id="language-select"
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
-          label="Select Language"
-          fullWidth
+          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
         >
           {LANGUAGES.map((lang) => (
-            <MenuItem key={lang} value={lang}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                {LANGUAGE_ICONS[lang]}
-                {lang}
-              </Box>
-            </MenuItem>
+            <option key={lang} value={lang}>
+              {lang}
+            </option>
           ))}
-        </Select>
-      </FormControl>
-      <Button 
-        variant="contained" 
+        </select>
+      </div>
+      <button 
         onClick={handleDebug} 
         disabled={loading}
-        sx={{ mt: 2 }}
+        className={`bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition-colors mt-2 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
-        {loading ? <CircularProgress size={24} /> : "Debug Code"}
-      </Button>
-    </Box>
+        {loading ? (
+          <div className="flex justify-center">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+          </div>
+        ) : "Debug Code"}
+      </button>
+    </div>
   );
 };
 

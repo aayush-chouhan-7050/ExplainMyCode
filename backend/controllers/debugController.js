@@ -7,8 +7,9 @@ const openai = new OpenAI({
 });
 
 exports.debugCode = async (req, res) => {
+  const { code, language } = req.body;
+  if (!req.user) return res.status(401).json({ message: "Unauthorized" });
   try {
-    const { code, language } = req.body;
     if (!code || !language) {
       return res.status(400).json({ error: "Missing code or language parameter" });
     }
@@ -49,6 +50,7 @@ ${code}
       code,
       language,
       result,
+      userId: req.user._id,
     });
 
     try {
