@@ -1,6 +1,7 @@
 import { ArrowRight, Play } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -24,8 +25,7 @@ export default function Landing() {
         <nav className="hidden md:flex space-x-8">
           <a href="#features" className="text-gray-700 hover:text-gray-900 transition-colors">Features</a>
           <a href="#how-it-works" className="text-gray-700 hover:text-gray-900 transition-colors">How It Works</a>
-          <a href="#pricing" className="text-gray-700 hover:text-gray-900 transition-colors">Pricing</a>
-          <a href="#docs" className="text-gray-700 hover:text-gray-900 transition-colors">Docs</a>
+          <a href="#" onClick={() => toast.error("This section is under development") } className="text-gray-700 hover:text-gray-900 transition-colors">Docs</a>
         </nav>
         <div className="flex items-center space-x-4">
           {user ? (
@@ -40,14 +40,14 @@ export default function Landing() {
               onClick={() => handleNavigation('/login')} 
               className="text-gray-700 hover:text-gray-900 transition-colors"
             >
-              Sign In
+              Sign Up
             </button>
           )}
           <button 
             onClick={() => user ? handleNavigation('/debug') : handleNavigation('/login')}
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition-colors"
           >
-            Try for Free
+            Login
           </button>
         </div>
       </header>
@@ -72,7 +72,7 @@ export default function Landing() {
             </button>
             <button 
               className="flex items-center justify-center px-6 py-3 text-gray-700 hover:text-gray-900 transition-colors"
-              aria-label="Watch product demo video"
+              aria-label="Watch product demo video" onClick={() => toast.error("Feature not available yet") }
             >
               Watch Demo
               <Play className="ml-2 h-5 w-5 fill-current" />
@@ -89,12 +89,12 @@ export default function Landing() {
             </div>
             <pre className="text-gray-100 text-sm overflow-x-auto">
               <code>
-                {`function calculateTotal(items) {
-  let total = 0;
-  for (const item of items) {
+                <span>function calculateTotal(items) {'{'}</span>
+                <div className="bg-red-900 bg-opacity-40 block"><span className="text-red-400">let total == 0;</span></div>
+                {`for (const item of items) {
     total += item.price;
-  }
-  return total;
+    }
+return total;
 }`}
               </code>
             </pre>
@@ -233,28 +233,27 @@ export default function Landing() {
             <h3 className="font-semibold mb-4">Product</h3>
             <ul className="space-y-2 text-gray-400">
               <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">API</a></li>
+              <li><a href="#" onClick={() => toast.error("This section is under development") } className="hover:text-white transition-colors">Documentation</a></li>
+              <li><a href="#" onClick={() => toast.error("This section is under development") } className="hover:text-white transition-colors">API</a></li>
             </ul>
           </div>
 
           <div>
             <h3 className="font-semibold mb-4">Company</h3>
             <ul className="space-y-2 text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              <li><a href="#" onClick={() => toast.error("This section is under development") } className="hover:text-white transition-colors">About</a></li>
+              <li><a href="#" onClick={() => toast.error("This section is under development") } className="hover:text-white transition-colors">Blog</a></li>
+              <li><a href="#" onClick={() => toast.error("This section is under development") } className="hover:text-white transition-colors">Careers</a></li>
+              <li><a href="https://www.linkedin.com/in/aayush-chouhan/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Contact</a></li>
             </ul>
           </div>
 
           <div>
             <h3 className="font-semibold mb-4">Legal</h3>
             <ul className="space-y-2 text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Terms</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Security</a></li>
+              <li><a href="#" onClick={() => toast.error("This section is under development") } className="hover:text-white transition-colors">Privacy</a></li>
+              <li><a href="#" onClick={() => toast.error("This section is under development") } className="hover:text-white transition-colors">Terms</a></li>
+              <li><a href="#" onClick={() => toast.error("This section is under development") } className="hover:text-white transition-colors">Security</a></li>
             </ul>
           </div>
         </div>

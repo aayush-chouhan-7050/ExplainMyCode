@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { getDebugHistory } from "../api";
-import api from "../api";
-import { getCurrentUser } from "../api";
+import { toast } from "react-toastify";
+import { getDebugHistory, getCurrentUser } from "../api";
 import {
   BugReport as BugIcon,
   Check as CheckIcon,
@@ -16,41 +15,44 @@ const Dashboard = () => {
   const { user } = useAuth(); // from context
   const [userData, setUserData] = useState(null); // local fetched user
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({
-    totalDebugs: 0,
-    successRate: 0,
-    activeStreak: 0
-  });
   const [recentHistory, setRecentHistory] = useState([]);
+  const [userLoading, setUserLoading] = useState(true); // Separate loading state for user data
+  const [fullHistory, setFullHistory] = useState([]);
+
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!user) return; // Don't proceed if no user data is available
       try {
-        const [historyRes, statsRes] = await Promise.all([
-          getDebugHistory(),
-          api.get("/api/stats")
-        ]);
-        setRecentHistory(historyRes.slice(0, 3));
-        setStats(statsRes.data);
+        setLoading(true); // Set loading to true before making the API call
+        const historyRes = await getDebugHistory();
+        setFullHistory(historyRes);
+        setRecentHistory(historyRes.slice(0, 3)); // Slice the history to get the most recent 3 items
       } catch (error) {
-        console.error("Failed to fetch dashboard data:", error);
+        console.error("Failed to fetch debug history:", error); // Improved error message
       } finally {
-        setLoading(false);
+        setLoading(false); // Set loading to false once the request completes
       }
     };
 
-    if (user) {
-      fetchData();
-    }
-  }, [user]);
+    fetchData();
+  }, [user]); // Trigger this effect when `user` state changes
+
+  // Fetch user data on initial load
   useEffect(() => {
     const fetchUser = async () => {
-      const data = await getCurrentUser();
-      setUserData(data);
+      try {
+        setUserLoading(true); // Set user loading to true
+        const data = await getCurrentUser();
+        setUserData(data);
+      } catch (error) {
+        console.error("Failed to fetch user data:", error); // Handle error during fetching user data
+      } finally {
+        setUserLoading(false); // Set user loading to false once the request completes
+      }
     };
     fetchUser();
   }, []);
-  
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -68,7 +70,7 @@ const Dashboard = () => {
     }
   };
 
-  if (loading) {
+  if (loading || userLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
@@ -82,7 +84,7 @@ const Dashboard = () => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">
-          Welcome back , {userData?.user?.username || "User"} !
+            Welcome back, {userData?.user?.username || "User"}!
           </h1>
           <p className="text-gray-600">
             Here's your coding activity overview
@@ -94,10 +96,10 @@ const Dashboard = () => {
             <NotificationsIcon />
           </button>
           <div className="h-10 w-10 rounded-full bg-gray-300 overflow-hidden">
-            <img 
-              src={user?.avatar || "https://img.freepik.com/premium-vector/person-with-blue-shirt-that-says-name-person_1029948-7040.jpg"} 
-              alt="User Profile" 
-              className="h-full w-full object-cover" 
+            <img
+              src={user?.avatar || "https://img.freepik.com/premium-vector/person-with-blue-shirt-that-says-name-person_1029948-7040.jpg"}
+              alt="User Profile"
+              className="h-full w-full object-cover"
             />
           </div>
         </div>
@@ -113,9 +115,7 @@ const Dashboard = () => {
             </div>
             <span className="text-gray-600 text-sm">This month</span>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">
-            {stats.totalDebugs}
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-900">{fullHistory.length}</h2>
           <p className="text-gray-600">Total Debugs</p>
         </div>
 
@@ -127,9 +127,7 @@ const Dashboard = () => {
             </div>
             <span className="text-gray-600 text-sm">Average</span>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">
-            {stats.successRate}%
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-900">N/A</h2>
           <p className="text-gray-600">Success Rate</p>
         </div>
 
@@ -141,9 +139,7 @@ const Dashboard = () => {
             </div>
             <span className="text-gray-600 text-sm">Current</span>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">
-            {stats.activeStreak} Days
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-900">N/A</h2>
           <p className="text-gray-600">Active Streak</p>
         </div>
       </div>
@@ -155,13 +151,13 @@ const Dashboard = () => {
         </h2>
 
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          {recentHistory.length > 0 ? (
+          {/* {recentHistory.length > 0 ? (
             recentHistory.map((item, index) => (
               <div key={index}>
                 {index > 0 && <hr className="border-gray-100" />}
                 <div
                   className="p-4 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition-colors"
-                  onClick={() => handleNavigation(`/history/${item.id}`)}
+                  onClick={() => toast.error("Feature not available yet") }
                 >
                   <div className="flex items-center">
                     <div className="w-10 h-10 bg-indigo-100 rounded-md flex items-center justify-center mr-4 text-indigo-600 text-lg">
@@ -169,7 +165,8 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <h3 className="font-medium text-gray-900">{item.title}</h3>
-                      <p className="text-sm text-gray-600">{item.languages.join(" • ")}</p>
+                      <p className="text-sm text-gray-600">{item.languages?.join(" • ") || "No languages"}</p>
+
                     </div>
                   </div>
                   <span className="text-sm text-gray-600">
@@ -182,7 +179,10 @@ const Dashboard = () => {
             <div className="p-6 text-center text-gray-600">
               No recent debug history
             </div>
-          )}
+          )} */}
+          <div className="p-6 text-center text-gray-600">
+             This section is under development
+          </div>
         </div>
       </div>
     </div>

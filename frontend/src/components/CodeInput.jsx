@@ -36,18 +36,18 @@ const LANGUAGE_MAP = {
 };
 
 const LANGUAGE_ICONS = {
-  Python: <FaPython />,
-  JavaScript: <FaJs />,
-  Java: <FaJava />,
-  Rust: <FaRust />,
-  HTML: <FaHtml5 />,
-  CSS: <FaCss3Alt />,
-  TypeScript: <SiTypescript />,
-  "C++": <SiCplusplus />,
-  Go: <SiGo />,
-  JSON: <SiJson />,
-  SQL: <SiMysql />,
-  "C#": <FaCode />,
+  Python: <FaPython size={18} />,
+  JavaScript: <FaJs size={18} />,
+  Java: <FaJava size={18} />,
+  Rust: <FaRust size={18} />,
+  HTML: <FaHtml5 size={18} />,
+  CSS: <FaCss3Alt size={18} />,
+  TypeScript: <SiTypescript size={18} />,
+  "C++": <SiCplusplus size={18} />,
+  Go: <SiGo size={18} />,
+  JSON: <SiJson size={18} />,
+  SQL: <SiMysql size={18} />,
+  "C#": <FaCode size={18} />,
 };
 
 const CodeInput = ({ setExplanation }) => {
@@ -75,9 +75,9 @@ const CodeInput = ({ setExplanation }) => {
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       <h6 className="text-xl font-semibold text-gray-900">Paste your code:</h6>
-      <div className="h-[40vh] min-h-[300px]">
+      <div className="h-[40vh] min-h-[300px] border border-gray-300 rounded-md overflow-hidden">
         <Editor
           height="100%"
           defaultLanguage="javascript"
@@ -89,26 +89,36 @@ const CodeInput = ({ setExplanation }) => {
             fontSize: 14,
             minimap: { enabled: false },
             scrollBeyondLastLine: false,
+            padding: { top: 10 },
           }}
         />
       </div>
+      
       <div className="w-full">
-        <label className="block text-gray-700 mb-2" htmlFor="language-select">Select Language</label>
-        <select
-          id="language-select"
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
-        >
-          {LANGUAGES.map((lang) => (
-            <option key={lang} value={lang}>
-              {lang}
-            </option>
-          ))}
-        </select>
+        <label className="block text-gray-700 mb-2" htmlFor="language-select">
+          Select Language
+        </label>
+        <div className="relative">
+          <div className="absolute left-3 top-2.5 text-gray-500">
+            {LANGUAGE_ICONS[language] || <FaCode size={18} />}
+          </div>
+          <select
+            id="language-select"
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            className="w-full p-2 pl-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          >
+            {LANGUAGES.map((lang) => (
+              <option key={lang} value={lang}>
+                {lang}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
-      <button 
-        onClick={handleDebug} 
+      
+      <button
+        onClick={handleDebug}
         disabled={loading}
         className={`bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition-colors mt-2 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
       >

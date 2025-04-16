@@ -85,6 +85,7 @@ const ProfilePage = () => {
               type="submit" 
               className={`bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={loading}
+              onClick={() => toast.error("Feature not available yet") }
             >
               {loading ? (
                 <div className="flex justify-center">

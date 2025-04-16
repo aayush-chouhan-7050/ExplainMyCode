@@ -197,7 +197,7 @@ export default function LoginSignupPage() {
               </div>
               {isLogin && (
                 <div className="text-sm">
-                  <a href="#" className="text-indigo-600 hover:text-indigo-500">
+                  <a href="#" onClick={() => toast.error("This section is under development ") } className="text-indigo-600 hover:text-indigo-500">
                     Forgot password?
                   </a>
                 </div>
@@ -252,14 +252,14 @@ export default function LoginSignupPage() {
               </div>
 
               <div className="mt-6 grid grid-cols-2 gap-3">
-                <button type="button" className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                <button type="button" onClick={() => toast.error("Feature not available yet") } className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                   {/* GitHub Icon */}
                   <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path fillRule="evenodd" clipRule="evenodd" d="M12 0C5.373 0 0 5.373 0 12C0 17.303 3.438 21.8 8.205 23.385C8.805 23.48 9.025 23.145 9.025 22.845C9.025 22.575 9.015 21.905 9.01 21.065C5.672 21.785 4.968 19.525 4.968 19.525C4.422 18.135 3.633 17.765 3.633 17.765C2.546 17.045 3.717 17.06 3.717 17.06C4.922 17.145 5.555 18.305 5.555 18.305C6.63 20.105 8.408 19.595 9.048 19.295C9.138 18.515 9.45 17.985 9.795 17.685C7.14 17.385 4.344 16.315 4.344 11.635C4.344 10.295 4.824 9.205 5.63 8.365C5.505 8.065 5.085 6.805 5.745 5.105C5.745 5.105 6.765 4.785 8.995 6.355C9.975 6.075 11.025 5.935 12.075 5.93C13.125 5.935 14.175 6.075 15.155 6.355C17.385 4.785 18.405 5.105 18.405 5.105C19.065 6.805 18.645 8.065 18.52 8.365C19.33 9.205 19.805 10.295 19.805 11.635C19.805 16.325 17.005 17.38 14.34 17.675C14.775 18.045 15.165 18.795 15.165 19.935C15.165 21.555 15.15 22.515 15.15 22.845C15.15 23.15 15.375 23.49 15.985 23.385C20.755 21.795 24 17.295 24 12C24 5.373 18.627 0 12 0Z" />
                   </svg>
                 </button>
 
-                <button type="button" className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                <button type="button" onClick={() => toast.error("Feature not available yet") } className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                   {/* Google Icon */}
                   <svg className="w-5 h-5" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
                     <path fill="#4285F4" d="M533.5 278.4c0-17.4-1.4-34.1-4.1-50.3H272v95.3h146.9c-6.3 34.1-25.3 63-53.9 82.3v68h86.9c50.8-46.8 81.6-115.8 81.6-195.3z"/>
