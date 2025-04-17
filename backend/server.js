@@ -15,7 +15,7 @@ const app = express();
 // CORS
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: "https://explainmycode-mu.vercel.app",
     credentials: true,
   })
 );
@@ -35,7 +35,7 @@ app.use(
     }),
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: 'none',
     },
