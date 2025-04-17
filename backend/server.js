@@ -27,7 +27,7 @@ app.use(bodyParser.json()); // optional here since express.json handles it
 
 app.use(
   session({
-    secret: "keyboard cat",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
@@ -36,8 +36,9 @@ app.use(
     }),
     cookie: {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      sameSite: 'none',
     },
   })
 );
