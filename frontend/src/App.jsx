@@ -7,7 +7,7 @@ import Landing from "./pages/Landing";
 import LoginSignupPage from "./pages/LoginSignupPage";
 import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./pages/ProfilePage";
-import DebugPage from "./pages/Debugpage";
+import DebugPage from "./pages/DebugPage";
 import DebugHistory from "./components/DebugHistory";
 
 // Import AuthContext
