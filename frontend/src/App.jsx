@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Analytics } from '@vercel/analytics/react';
 
 // Import pages
 import Landing from "./pages/Landing";
@@ -32,29 +33,33 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-      <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<LoginSignupPage />} />
+      <>
+        <Router>
+          <AuthProvider>
+            <Routes>
+                <Route path="/" element={<Landing />} />
+                <Route path="/login" element={<LoginSignupPage />} />
 
-          {/* Routes with sidebar layout */}
-          <Route 
-            element={
-              <ProtectedRoute>
-                <MainLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/debug" element={<DebugPage />} />
-            <Route path="/history" element={<DebugHistory />} />
-            <Route path="/profile" element={<ProfilePage />} />
-          </Route>
-        </Routes>
-        <ToastContainer position="top-right" autoClose={3000} />
-      </AuthProvider>
-    </Router>
+                {/* Routes with sidebar layout */}
+                <Route 
+                  element={
+                    <ProtectedRoute>
+                      <MainLayout />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/debug" element={<DebugPage />} />
+                  <Route path="/history" element={<DebugHistory />} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                </Route>
+              </Routes>
+              <ToastContainer position="top-right" autoClose={3000} />
+            </AuthProvider>
+          </Router>
+        <Analytics />
+      </>
+
   );
 }
 
