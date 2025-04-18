@@ -1,5 +1,5 @@
 // src/components/MainLayout.jsx
-import React from "react";
+import React, { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -8,30 +8,60 @@ import {
   Person as PersonIcon,
   Logout as LogoutIcon,
   Dashboard as DashboardIcon,
+  Menu as MenuIcon,
+  Close as CloseIcon,
 } from "@mui/icons-material";
 
 const MainLayout = () => {
   const { logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleNavigation = (path) => {
     navigate(path);
+    setSidebarOpen(false); // Close sidebar after navigation on mobile
   };
 
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar  */}
-      <div className="w-60 flex-shrink-0 bg-white border-r border-gray-200 flex flex-col p-6">
-        <a href="/dashboard">
-        <div className="text-indigo-600 font-semibold text-xl mb-8">
+    <div className="flex h-screen relative">
+      {/* Mobile Header */}
+      <div className="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 p-4 z-10 flex justify-between items-center">
+        <a href="/dashboard" className="text-indigo-600 font-semibold text-xl">
           &lt;/&gt; ExplainMyCode
-        </div></a>
-       
+        </a>
+        <button 
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="p-2 text-gray-700 hover:bg-gray-100 rounded-md"
+        >
+          {sidebarOpen ? <CloseIcon /> : <MenuIcon />}
+        </button>
+      </div>
 
-        <div className="flex-grow">
+      {/* Overlay for mobile when sidebar is open */}
+      {sidebarOpen && (
+        <div 
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-20"
+          onClick={() => setSidebarOpen(false)}
+        ></div>
+      )}
+
+      {/* Sidebar - Hidden on mobile by default, shown when toggled */}
+      <div className={`
+        fixed md:static inset-y-0 left-0 z-30
+        w-60 flex-shrink-0 bg-white border-r border-gray-200 
+        flex flex-col p-6 transition-all duration-300 transform
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+      `}>
+        <a href="/dashboard" className="md:block hidden">
+          <div className="text-indigo-600 font-semibold text-xl mb-8">
+            &lt;/&gt; ExplainMyCode
+          </div>
+        </a>
+
+        <div className="flex-grow mt-14 md:mt-0">
           <ul className="space-y-2">
             <li>
               <button
@@ -100,8 +130,8 @@ const MainLayout = () => {
         </button>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-grow bg-gray-50 p-6 overflow-y-auto">
+      {/* Main Content - Add padding-top on mobile for the header */}
+      <div className="flex-grow bg-gray-50 p-6 overflow-y-auto pt-20 md:pt-6 w-full">
         <Outlet />
       </div>
     </div>

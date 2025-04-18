@@ -33,14 +33,14 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="p-6">
-      <h4 className="text-3xl font-bold mb-4 text-gray-900">
+    <div className="p-2 md:p-6">
+      <h4 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900">
         Profile Settings
       </h4>
       
-      <div className="bg-white rounded-lg border border-gray-100 p-6 mb-6 hover:shadow-md transition-shadow">
-        <div className="flex items-center mb-6">
-          <div className="w-20 h-20 bg-gray-200 rounded-full mr-6 overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-100 p-4 md:p-6 mb-6 hover:shadow-md transition-shadow">
+        <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-4">
+          <div className="w-16 h-16 md:w-20 md:h-20 bg-gray-200 rounded-full overflow-hidden mx-auto sm:mx-0 sm:mr-6">
             {user.avatar ? (
               <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
             ) : (
@@ -49,9 +49,9 @@ const ProfilePage = () => {
               </div>
             )}
           </div>
-          <div>
+          <div className="text-center sm:text-left">
             <h6 className="text-xl font-semibold text-gray-900">{user.name}</h6>
-            <p className="text-gray-600">
+            <p className="text-gray-600 break-all">
               {user.email}
             </p>
           </div>
@@ -99,7 +99,7 @@ const ProfilePage = () => {
 
       <hr className="my-6 border-gray-200" />
 
-      <div className="bg-white rounded-lg border border-gray-100 p-6 hover:shadow-md transition-shadow">
+      <div className="bg-white rounded-lg border border-gray-100 p-4 md:p-6 hover:shadow-md transition-shadow">
         <h6 className="text-xl font-semibold mb-4 text-gray-900">
           Account Actions
         </h6>

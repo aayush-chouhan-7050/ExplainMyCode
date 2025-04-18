@@ -19,7 +19,6 @@ const Dashboard = () => {
   const [userLoading, setUserLoading] = useState(true); // Separate loading state for user data
   const [fullHistory, setFullHistory] = useState([]);
 
-
   useEffect(() => {
     const fetchData = async () => {
       if (!user) return; // Don't proceed if no user data is available
@@ -79,11 +78,11 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-2 md:p-6 bg-gray-50 min-h-screen">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 md:mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">
+          <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
             Welcome back, {userData?.username || "User"}!
           </h1>
           <p className="text-gray-600">
@@ -91,7 +90,7 @@ const Dashboard = () => {
           </p>
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between md:justify-normal md:space-x-4">
           <button className="text-gray-600 hover:text-gray-900 transition-colors">
             <NotificationsIcon />
           </button>
@@ -106,81 +105,52 @@ const Dashboard = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
         {/* Total Debugs */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
           <div className="flex items-center mb-2">
             <div className="bg-indigo-100 p-2 rounded-md flex items-center justify-center mr-3">
               <BugIcon className="text-indigo-600" />
             </div>
             <span className="text-gray-600 text-sm">This month</span>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">{fullHistory.length}</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">{fullHistory.length}</h2>
           <p className="text-gray-600">Total Debugs</p>
         </div>
 
         {/* Success Rate */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
           <div className="flex items-center mb-2">
             <div className="bg-green-100 p-2 rounded-md flex items-center justify-center mr-3">
               <CheckIcon className="text-green-600" />
             </div>
             <span className="text-gray-600 text-sm">Average</span>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">N/A</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">N/A</h2>
           <p className="text-gray-600">Success Rate</p>
         </div>
 
         {/* Active Streak */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
           <div className="flex items-center mb-2">
             <div className="bg-amber-100 p-2 rounded-md flex items-center justify-center mr-3">
               <FireIcon className="text-amber-600" />
             </div>
             <span className="text-gray-600 text-sm">Current</span>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">N/A</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">N/A</h2>
           <p className="text-gray-600">Active Streak</p>
         </div>
       </div>
 
       {/* Recent Debug History */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4 text-gray-900">
+      <div className="mb-6 md:mb-8">
+        <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-gray-900">
           Recent Debug History
         </h2>
 
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          {/* {recentHistory.length > 0 ? (
-            recentHistory.map((item, index) => (
-              <div key={index}>
-                {index > 0 && <hr className="border-gray-100" />}
-                <div
-                  className="p-4 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition-colors"
-                  onClick={() => toast.error("Feature not available yet") }
-                >
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 bg-indigo-100 rounded-md flex items-center justify-center mr-4 text-indigo-600 text-lg">
-                      &lt;/&gt;
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-gray-900">{item.title}</h3>
-                      <p className="text-sm text-gray-600">{item.languages?.join(" • ") || "No languages"}</p>
-
-                    </div>
-                  </div>
-                  <span className="text-sm text-gray-600">
-                    {formatTimeAgo(item.timestamp)}
-                  </span>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="p-6 text-center text-gray-600">
-              No recent debug history
-            </div>
-          )} */}
-          <div className="p-6 text-center text-gray-600">
+          <div className="p-4 md:p-6 text-center text-gray-600">
              This section is under development
           </div>
         </div>
