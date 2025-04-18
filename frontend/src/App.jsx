@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Analytics } from '@vercel/analytics/react';
+import WatchDemo from "./pages/WatchDemo";
 
 // Import pages
 import Landing from "./pages/Landing";
@@ -38,6 +39,7 @@ function App() {
           <AuthProvider>
             <Routes>
                 <Route path="/" element={<Landing />} />
+                <Route path="/watch-demo" element={<WatchDemo />} />
                 <Route path="/login" element={<LoginSignupPage />} />
 
                 {/* Routes with sidebar layout */}

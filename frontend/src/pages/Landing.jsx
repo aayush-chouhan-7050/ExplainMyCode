@@ -72,7 +72,7 @@ export default function Landing() {
             </button>
             <button 
               className="flex items-center justify-center px-6 py-3 text-gray-700 hover:text-gray-900 transition-colors"
-              aria-label="Watch product demo video" onClick={() => toast.error("Feature not available yet") }
+              aria-label="Watch product demo video" onClick={() => handleNavigation('/watch-demo')}
             >
               Watch Demo
               <Play className="ml-2 h-5 w-5 fill-current" />
