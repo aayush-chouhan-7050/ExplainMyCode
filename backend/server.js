@@ -2,13 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
-const session = require("express-session");
-const passport = require("passport");
-const passportConfig = require("./passport/passportConfig");
-const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
 const debugRoutes = require("./routes/debugRoutes");
-const MongoStore = require("connect-mongo");
+const auth = require("./middleware/auth"); 
 
 const app = express();
 
@@ -23,35 +19,14 @@ app.use(
 // Body parser
 app.use(express.json());
 
-// Session
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI,
-      collectionName: "sessions",
-    }),
-    cookie: {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000,
-      sameSite: process.env.SAMESITE_VALUE,
-    },
-  })
-);
-
-// Passport
-app.use(passport.initialize());
-app.use(passport.session());
-
 // Connect DB
 connectDB();
 
-// Routes
+// Public routes
 app.use("/auth", authRoutes);
-app.use("/api/debug", debugRoutes);
+
+// Protected routes (using JWT authentication middleware)
+app.use("/api/debug", auth, debugRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

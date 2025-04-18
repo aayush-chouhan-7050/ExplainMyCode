@@ -84,7 +84,7 @@ const Dashboard = () => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">
-            Welcome back, {userData?.user?.username || "User"}!
+            Welcome back, {userData?.username || "User"}!
           </h1>
           <p className="text-gray-600">
             Here's your coding activity overview

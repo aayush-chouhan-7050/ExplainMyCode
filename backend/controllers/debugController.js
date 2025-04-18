@@ -3,7 +3,7 @@ const DebugHistory = require("../models/DebugHistory");
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  baseURL: "https://api.chatanywhere.org/v1", // Custom base URL
+  baseURL: process.env.OPENAI_BASE_URL || "https://api.chatanywhere.org/v1",
 });
 
 exports.debugCode = async (req, res) => {
@@ -68,14 +68,24 @@ ${code}
 };
 
 function parseAIResponse(responseText, originalCode) {
-  const errorBlock = responseText.split('<START>')[1]?.split('<END>')[0] || "";
-  const codeMatch = errorBlock.match(/```(?:\w+)?\s*\n([\s\S]*?)\n```/);
+  try {
+    const errorBlock = responseText.split('<START>')[1]?.split('<END>')[0] || "";
+    const codeMatch = errorBlock.match(/```(?:\w+)?\s*\n([\s\S]*?)\n```/);
 
-  return {
-    error_type: (errorBlock.match(/\[Error Type\]:\s*(.+)/i) || [])[1]?.trim() || "Unknown",
-    explanation: (errorBlock.match(/\[Explanation\]:\s*([\s\S]*?)\n\[Fixed Code\]/i) || [])[1]?.trim() || "No explanation",
-    fixed_code: codeMatch ? codeMatch[1].trim() : originalCode,
-    optimizations: (errorBlock.match(/\[Optimization\]:\s*(.+)/i) || [])[1]?.trim() || "None",
-  };
+    return {
+      error_type: (errorBlock.match(/\[Error Type\]:\s*(.+)/i) || [])[1]?.trim() || "Unknown",
+      explanation: (errorBlock.match(/\[Explanation\]:\s*([\s\S]*?)\n\[Fixed Code\]/i) || [])[1]?.trim() || "No explanation",
+      fixed_code: codeMatch ? codeMatch[1].trim() : originalCode,
+      optimizations: (errorBlock.match(/\[Optimization\]:\s*(.+)/i) || [])[1]?.trim() || "None",
+    };
+  } catch (error) {
+    console.error("Error parsing AI response:", error);
+    return {
+      error_type: "Parsing Error",
+      explanation: "Failed to parse AI response",
+      fixed_code: originalCode,
+      optimizations: "None"
+    };
+  }
 }
 
