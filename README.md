@@ -39,6 +39,27 @@
 
 ---
 
+## ⚙️ Environment Variables
+
+Create `.env` files in both the `backend/` and `frontend/` directories for proper configuration.
+
+### 🔐 `backend/.env`
+
+```env
+PORT=8080
+MONGODB_URI=your_mongodb_connection_string
+OPENAI_API_KEY=your_openai_or_local_model_key
+OPENAI_BASE_URL=https://api.chatanywhere.org/v1
+CLIENT_URL=http://localhost:5173
+JWT_SECRET=your_jwt_secret
+```
+
+### 🔐 `frontend/.env`
+
+```env
+VITE_BACKEND_URL=http://localhost:8080/
+```
+
 ## 🚀 Getting Started
 
 ### **1️⃣ Clone the Repository**
@@ -58,16 +79,20 @@ cd ../frontend
 npm install
 ```
 
-### **3️⃣ Run the Project**
+### **3️⃣ Set Up Environment Variables**
+- Create `.env` files in both `backend/` and `frontend/` directories.
+- Fill in the required variables as mentioned above.
+
+### **4️⃣ Run the Project**
 
 ```bash
 # Start Backend
 cd backend
-npm start
+node server.js
 
 # Start Frontend
 cd frontend
-npm start
+npm run dev
 ```
 
 ---
