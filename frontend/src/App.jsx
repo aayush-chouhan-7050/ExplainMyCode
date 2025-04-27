@@ -11,10 +11,15 @@ import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./pages/ProfilePage";
 import DebugPage from "./pages/DebugPage";
 import DebugHistory from "./components/DebugHistory";
+import TermsPage from "./pages/TermsPage";
+import PrivacyPage from "./pages/PrivacyPage";
+import SecurityPage from "./pages/SecurityPage";
+import AboutPage from "./pages/AboutPage";
 
 // Import AuthContext
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import MainLayout from "./components/MainLayout";
+import DocsPage from "./pages/DocsPage";
 
 
 // Protected Route Component
@@ -40,7 +45,12 @@ function App() {
             <Routes>
                 <Route path="/" element={<Landing />} />
                 <Route path="/watch-demo" element={<WatchDemo />} />
+                <Route path="/docs" element={<DocsPage />} />
+                <Route path="/terms" element={<TermsPage />} />
+                <Route path="/privacy" element={<PrivacyPage />} />
+                <Route path="/security" element={<SecurityPage />} />
                 <Route path="/login" element={<LoginSignupPage />} />
+                <Route path="/about" element={<AboutPage />} />
 
                 {/* Routes with sidebar layout */}
                 <Route 
