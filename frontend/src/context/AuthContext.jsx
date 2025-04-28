@@ -1,8 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getCurrentUser, login as apiLogin, logout as apiLogout, register as apiRegister,
-  //  updateProfile as apiUpdateProfile 
+import { getCurrentUser, login as apiLogin, logout as apiLogout, register as apiRegister, 
 } from "../api";
 
 const AuthContext = createContext();
@@ -47,6 +46,9 @@ export function AuthProvider({ children }) {
       throw err;
     }
   };
+  const updateUserState = (updatedUser) => {
+    setUser(updatedUser);
+  };
 
   const register = async (email, password, username) => {
     try {
@@ -78,19 +80,6 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // const updateProfile = async (data) => {
-  //   try {
-  //     const updatedUser = await apiUpdateProfile(data);
-  //     setUser(updatedUser);
-  //     toast.success("Profile updated successfully!");
-  //     return updatedUser;
-  //   } catch (err) {
-  //     const errorMessage = err.response?.data?.message || err.message || "Profile update failed";
-  //     toast.error(errorMessage);
-  //     throw err;
-  //   }
-  // };
-
   return (
     <AuthContext.Provider
       value={{
@@ -100,7 +89,7 @@ export function AuthProvider({ children }) {
         login,
         register,
         logout,
-        // updateProfile,
+        updateUserState
       }}
     >
       {children}

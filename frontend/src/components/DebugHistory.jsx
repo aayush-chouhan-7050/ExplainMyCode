@@ -122,20 +122,70 @@ const DebugHistory = () => {
           
           {filtered.length > itemsPerPage && (
             <div className="flex justify-center mt-4">
-              <div className="flex space-x-2">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-                  <button
-                    key={num}
-                    onClick={() => setPage(num)}
-                    className={`w-8 h-8 flex items-center justify-center rounded-md ${
-                      page === num
-                        ? 'bg-indigo-600 text-white'
-                        : 'bg-white text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    {num}
-                  </button>
-                ))}
+              <div className="flex items-center space-x-2">
+                {/* Previous button */}
+                <button
+                  onClick={() => setPage(Math.max(1, page - 1))}
+                  disabled={page === 1}
+                  className={`px-3 py-1 rounded-md ${
+                    page === 1
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : 'bg-white text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  Previous
+                </button>
+                
+                {/* Pagination numbers with ellipsis */}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => {
+                  // Always show first page, current page, last page, and pages close to current
+                  const shouldShow = 
+                    num === 1 || 
+                    num === totalPages || 
+                    (num >= page - 1 && num <= page + 1);
+                  
+                  // Show ellipsis when skipping pages
+                  if (!shouldShow) {
+                    // Show ellipsis after first page if there's a gap
+                    if (num === 2 && page > 3) {
+                      return <span key={`ellipsis-start`} className="px-2">...</span>;
+                    }
+                    // Show ellipsis before last page if there's a gap
+                    if (num === totalPages - 1 && page < totalPages - 2) {
+                      return <span key={`ellipsis-end`} className="px-2">...</span>;
+                    }
+                    return null;
+                  }
+                  
+                  return (
+                    <button
+                      key={num}
+                      onClick={() => setPage(num)}
+                      aria-label={`Go to page ${num}`}
+                      aria-current={page === num ? 'page' : undefined}
+                      className={`w-8 h-8 flex items-center justify-center rounded-md ${
+                        page === num
+                          ? 'bg-indigo-600 text-white'
+                          : 'bg-white text-gray-700 hover:bg-gray-100'
+                      }`}
+                    >
+                      {num}
+                    </button>
+                  );
+                }).filter(Boolean)}
+                
+                {/* Next button */}
+                <button
+                  onClick={() => setPage(Math.min(totalPages, page + 1))}
+                  disabled={page === totalPages}
+                  className={`px-3 py-1 rounded-md ${
+                    page === totalPages
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : 'bg-white text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  Next
+                </button>
               </div>
             </div>
           )}

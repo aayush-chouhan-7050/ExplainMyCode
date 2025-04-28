@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
+import { updateUserProfile } from "../api";
 
 const ProfilePage = () => {
-  const { user, updateProfile, logout } = useAuth();
+  const { user, logout, updateUserState } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
-      setName(user.name || "");
+      setName(user.username || "");
       setEmail(user.email || "");
     }
   }, [user]);
@@ -19,10 +20,16 @@ const ProfilePage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await updateProfile({ name, email });
-      toast.success("Profile updated successfully!");
+      // Only update username, not email
+      await updateUserProfile({ username: name });
+      
+      // Update the user state in the auth context to reflect the new username
+      updateUserState({ ...user, username: name });
+      
+      toast.success("Username updated successfully!");
     } catch (error) {
-      toast.error("Failed to update profile");
+      toast.error("Failed to update username");
+      console.error("Profile update error:", error);
     } finally {
       setLoading(false);
     }
@@ -45,12 +52,12 @@ const ProfilePage = () => {
               <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-gray-500 text-xl font-bold">
-                {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                {user.username ? user.username.charAt(0).toUpperCase() : "U"}
               </div>
             )}
           </div>
           <div className="text-center sm:text-left">
-            <h6 className="text-xl font-semibold text-gray-900">{user.name}</h6>
+            <h6 className="text-xl font-semibold text-gray-900">{user.username}</h6>
             <p className="text-gray-600 break-all">
               {user.email}
             </p>
@@ -59,7 +66,7 @@ const ProfilePage = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700 mb-2">Full Name</label>
+            <label htmlFor="name" className="block text-gray-700 mb-2">Username</label>
             <input
               id="name"
               type="text"
@@ -75,23 +82,23 @@ const ProfilePage = () => {
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
-              required
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-gray-100"
+              disabled
+              readOnly
             />
+            <p className="mt-1 text-sm text-gray-500">Email address cannot be changed</p>
           </div>
           <div className="mt-4">
             <button 
               type="submit" 
               className={`bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={loading}
-              onClick={() => toast.error("Feature not available yet") }
             >
               {loading ? (
                 <div className="flex justify-center">
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                 </div>
-              ) : "Update Profile"}
+              ) : "Update Username"}
             </button>
           </div>
         </form>

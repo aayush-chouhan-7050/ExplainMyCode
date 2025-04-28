@@ -108,4 +108,30 @@ router.post("/logout", auth, async (req, res) => {
   }
 });
 
+// Profile update route
+router.put("/update-profile", auth, async (req, res) => {
+  try {
+    const { username, email } = req.body;
+    
+    // Update user
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { username, email },
+      { new: true }
+    );
+    
+    res.json({
+      message: "Profile updated successfully",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email
+      }
+    });
+  } catch (error) {
+    console.error("Profile update error:", error);
+    res.status(500).json({ error: "Profile update failed" });
+  }
+});
+
 module.exports = router;
